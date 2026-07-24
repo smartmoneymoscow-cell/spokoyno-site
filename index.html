@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Спокойно — умный трекер здоровья для возрастных людей</title>
+<style>
+  :root{
+    --teal:#4da699;
+    --teal-dark:#3c887d;
+    --teal-solid:#12a396;
+    --ink:#101a19;
+    --muted:#63696a;
+    --bg-panel:#f0f4f5;
+    --line:#e2e8e6;
+    --pill-bg:#c9e9e3;
+    --radius-lg:18px;
+    --radius-md:12px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color:var(--ink);
+    background:#fff;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{text-decoration:none;color:inherit;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    padding:22px 0;
+  }
+  .header-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:800;
+    font-size:19px;
+    letter-spacing:0.2px;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  .logo img{flex-shrink:0;display:block;}
+
+  nav{
+    display:flex;
+    align-items:center;
+    gap:34px;
+  }
+  nav a{
+    font-size:15px;
+    color:#3a4544;
+    font-weight:500;
+    position:relative;
+    padding-bottom:4px;
+  }
+  nav a.active{
+    color:var(--ink);
+    font-weight:600;
+  }
+  nav a.active::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;
+    bottom:-6px;
+    height:2px;
+    background:var(--teal);
+    border-radius:2px;
+  }
+
+  .btn-cta{
+    background:var(--teal);
+    color:#fff;
+    padding:13px 22px;
+    border-radius:10px;
+    font-weight:700;
+    font-size:14px;
+    letter-spacing:0.3px;
+    white-space:nowrap;
+    transition:background .15s ease;
+  }
+  .btn-cta:hover{background:var(--teal-dark);}
+
+  /* ---------- HERO ---------- */
+  .hero-panel{
+    background:var(--bg-panel);
+    border-radius:22px;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-items:stretch;
+  }
+  .hero-content{
+    padding:56px 52px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .hero-content h1{
+    font-size:31px;
+    line-height:1.32;
+    margin:0 0 18px 0;
+    font-weight:800;
+    letter-spacing:0.1px;
+  }
+  .hero-content h1 .accent{
+    color:var(--teal);
+  }
+  .hero-sub{
+    font-size:15px;
+    line-height:1.6;
+    color:var(--muted);
+    margin:0 0 26px 0;
+    max-width:460px;
+  }
+  .hero-sub p{margin:0;}
+
+  .chips{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:28px;
+  }
+  .chip{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    background:#fff;
+    padding:9px 14px;
+    border-radius:20px;
+    font-size:13.5px;
+    font-weight:600;
+    color:#33403e;
+    border:1px solid #e3e9e7;
+  }
+  .chip .sos-badge{
+    background:var(--teal);
+    color:#fff;
+    font-size:10px;
+    font-weight:800;
+    padding:2px 6px;
+    border-radius:5px;
+    letter-spacing:0.3px;
+  }
+  .chip svg{flex-shrink:0;}
+
+  .checks{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px 24px;
+    margin-bottom:30px;
+  }
+  .check-item{
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    font-size:14px;
+    line-height:1.45;
+    color:#3a4544;
+  }
+  .check-item .tick{
+    width:18px;height:18px;
+    border-radius:50%;
+    background:#e4f3ef;
+    color:var(--teal-dark);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    margin-top:1px;
+  }
+  .check-item b{font-weight:700;color:var(--ink);}
+
+  .cta-row{
+    display:flex;
+    gap:14px;
+    align-items:stretch;
+  }
+  .buy-btn{
+    background:var(--teal);
+    color:#fff;
+    border-radius:12px;
+    padding:8px 8px 8px 22px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    min-width:230px;
+    transition:background .15s ease;
+  }
+  .buy-btn:hover{background:var(--teal-dark);}
+  .buy-text{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    text-align:left;
+  }
+  .buy-title{
+    font-weight:800;
+    font-size:14px;
+    letter-spacing:0.3px;
+    line-height:1.3;
+  }
+  .buy-text .sub{
+    font-size:11px;
+    font-weight:500;
+    opacity:0.92;
+    margin-top:3px;
+    line-height:1.3;
+  }
+  .price-pill{
+    background:#5bb9ad;
+    color:#fff;
+    font-weight:800;
+    font-size:16.5px;
+    letter-spacing:0.2px;
+    padding:11px 18px;
+    border-radius:999px;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+
+  .quiz-btn{
+    background:#fff;
+    border:1px solid #dfe6e4;
+    border-radius:12px;
+    padding:14px 20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:left;
+    min-width:210px;
+  }
+  .quiz-btn .title{
+    font-weight:700;
+    font-size:13.5px;
+    color:var(--ink);
+    margin-bottom:3px;
+  }
+  .quiz-btn .sub{
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  .hero-image{
+    position:relative;
+    min-height:100%;
+    background-size:cover;
+    background-position:center;
+  }
+  .hero-image img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how-it-works{
+    margin-top:64px;
+    padding-bottom:80px;
+  }
+  .eyebrow{
+    font-size:13px;
+    font-weight:600;
+    color:#8b9291;
+    margin:0 0 8px 0;
+  }
+  .how-it-works h2{
+    font-size:26px;
+    font-weight:800;
+    letter-spacing:0.1px;
+    margin:0 0 32px 0;
+    color:var(--ink);
+  }
+  .how-it-works h2 .accent{
+    color:var(--teal);
+  }
+
+  .steps-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+  }
+
+  .step-card, .doubt-card{
+    background:var(--bg-panel);
+    border-radius:var(--radius-lg);
+    padding:20px;
+  }
+
+  .step-badge{
+    display:inline-block;
+    background:var(--teal-solid);
+    color:#fff;
+    font-weight:700;
+    font-size:13px;
+    padding:7px 16px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+
+  .step-card img{
+    width:100%;
+    height:190px;
+    object-fit:cover;
+    border-radius:var(--radius-md);
+    display:block;
+    margin-bottom:18px;
+  }
+
+  .step-card h3{
+    font-size:19px;
+    font-weight:700;
+    line-height:1.3;
+    margin:0 0 10px 0;
+    color:var(--ink);
+  }
+
+  .step-intro{
+    font-size:14px;
+    line-height:1.5;
+    color:var(--muted);
+    margin:0 0 12px 0;
+  }
+
+  .step-checks{
+    list-style:none;
+    margin:0 0 4px 0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .step-checks li{
+    position:relative;
+    padding-left:22px;
+    font-size:13.5px;
+    line-height:1.45;
+    color:var(--muted);
+  }
+  .step-checks li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:2px;
+    width:14px;
+    height:14px;
+    background:var(--teal);
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 13l4 4L19 7' stroke='black' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 13l4 4L19 7' stroke='black' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+  }
+
+  .stat-pills{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:14px;
+  }
+  .stat-pill{
+    background:var(--pill-bg);
+    color:var(--teal-dark);
+    font-size:12.5px;
+    font-weight:700;
+    padding:9px 14px;
+    border-radius:999px;
+  }
+
+  .doubt-card{
+    background:#fff;
+    border:1px solid var(--line);
+    display:flex;
+    flex-direction:column;
+    padding:28px;
+  }
+  .doubt-card h3{
+    font-size:22px;
+    font-weight:800;
+    line-height:1.35;
+    margin:0 0 18px 0;
+    color:var(--ink);
+  }
+  .doubt-card .step-checks{
+    margin-bottom:22px;
+  }
+  .doubt-card .quiz-btn{
+    margin-top:auto;
+    min-width:0;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:980px){
+    nav{display:none;}
+    .hero-panel{grid-template-columns:1fr;}
+    .hero-image{min-height:320px;order:-1;}
+    .hero-content{padding:38px 26px;}
+    .checks{grid-template-columns:1fr;}
+    .cta-row{flex-wrap:wrap;}
+    .buy-btn,.quiz-btn{min-width:0;flex:1 1 200px;}
+    .steps-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:520px){
+    .hero-content h1{font-size:25px;}
+    .header-inner .btn-cta{padding:10px 14px;font-size:12.5px;}
+    .logo{font-size:16px;}
+    .how-it-works h2{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <img src="assets/logo-icon.png" alt="Спокойно" width="28" height="24">
+        СПОКОЙНО
+      </div>
+      <nav>
+        <a href="#">Как работает</a>
+        <a href="#" class="active">Для кого</a>
+        <a href="#">Что отслеживает</a>
+        <a href="#">Отзывы</a>
+        <a href="#">FAQ</a>
+      </nav>
+      <a href="#" class="btn-cta">ОСТАВИТЬ ЗАЯВКУ</a>
+    </div>
+  </header>
+
+  <section class="hero-panel">
+    <div class="hero-content">
+      <h1>УМНЫЙ <span class="accent">ТРЕКЕР ЗДОРОВЬЯ</span> ДЛЯ ВОЗРАСТНЫХ ЛЮДЕЙ — ПОМОГАЕТ ЗНАТЬ ЧТО С БЛИЗКИМ ВСЕ ХОРОШО</h1>
+
+      <div class="hero-sub">
+        <p>Родственник носит браслет, вы видите статус.<br>
+        При SOS или падении — мгновенное уведомление.</p>
+      </div>
+
+      <div class="chips">
+        <span class="chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z" stroke="#3fb39a" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Активность
+        </span>
+        <span class="chip">
+          <span class="sos-badge">SOS</span>
+          SOS-кнопка
+        </span>
+        <span class="chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" stroke="#3fb39a" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          Качество сна
+        </span>
+      </div>
+
+      <div class="checks">
+        <div class="check-item">
+          <span class="tick">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>Три месяца подписки<br><b>— бесплатно</b></span>
+        </div>
+        <div class="check-item">
+          <span class="tick">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span><b>Без автоматического</b><br>списания</span>
+        </div>
+        <div class="check-item">
+          <span class="tick">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span>Не понравилось за 30 дней?</span>
+        </div>
+        <div class="check-item">
+          <span class="tick">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span><b>Вернем деньги</b></span>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a href="#" class="buy-btn">
+          <span class="buy-text">
+            <span class="buy-title">КУПИТЬ БРАСЛЕТ</span>
+            <span class="sub">+3 месяца подписки бесплатно</span>
+          </span>
+          <span class="price-pill">4500 ₽</span>
+        </a>
+        <a href="#" class="quiz-btn">
+          <span class="title">ПОДОЙДЕТ ЛИ БРАСЛЕТ?</span>
+          <span class="sub">Пройти опрос за 1 минуту</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <img src="assets/hero-photo.jpeg" alt="Пожилая женщина и дочь обнимаются на кухне">
+    </div>
+  </section>
+
+  <section class="how-it-works">
+    <p class="eyebrow">Как это работает</p>
+    <h2>ОТ ЗАКАЗА <span class="accent">ДО ПОЛНОГО СПОКОЙСТВИЯ</span></h2>
+
+    <div class="steps-grid">
+
+      <div class="step-card">
+        <span class="step-badge">Шаг 1</span>
+        <img src="assets/step1.jpg" alt="Оформление заказа">
+        <h3>Оформление заказа</h3>
+        <p class="step-intro">Закажите браслет за пару минут и обретите спокойствие:</p>
+        <ul class="step-checks">
+          <li>Выберите цвет браслета</li>
+          <li>Оплатите удобным способом</li>
+          <li>Укажите адрес доставки — привезем в любую точку России</li>
+        </ul>
+      </div>
+
+      <div class="step-card">
+        <span class="step-badge">Шаг 2</span>
+        <img src="assets/step2.jpg" alt="Доставка и настройка">
+        <h3>Доставка и настройка</h3>
+        <p class="step-intro">Вы можете быть спокойны — мы всё сделаем сами:</p>
+        <ul class="step-checks">
+          <li>Доставим браслет прямо домой</li>
+          <li>Всё подключим и настроим</li>
+          <li>Вовлечем родственника в процесс: объясним простым языком</li>
+        </ul>
+        <div class="stat-pills">
+          <span class="stat-pill">95% хотят использовать браслет</span>
+          <span class="stat-pill">Не понравится – вернем деньги</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <span class="step-badge">Шаг 3</span>
+        <img src="assets/step3.jpg" alt="Использование браслета родственником">
+        <h3>Использование браслета родственником</h3>
+        <ul class="step-checks">
+          <li>У родственника свое приложение, где всё отображается наглядно</li>
+          <li>Игровая механика помогает сформировать полезные привычки</li>
+          <li>Пожилые люди начинают следить за своими показателями</li>
+        </ul>
+        <div class="stat-pills">
+          <span class="stat-pill">&gt;87% ежедневно заходят в приложение</span>
+          <span class="stat-pill">&gt;70% улучшили показатели активности</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <span class="step-badge">Шаг 4</span>
+        <img src="assets/step4.jpg" alt="Приложение для Вас">
+        <h3>Приложение для Вас</h3>
+        <ul class="step-checks">
+          <li>Вы видите показатели здоровья в режиме реального времени</li>
+          <li>Отчеты показывают динамику изменений показателей здоровья</li>
+          <li>Вы сможете вовремя отреагировать при ухудшении показателей</li>
+          <li>Вы получите уведомление в случае падения или нажатия кнопки SOS</li>
+        </ul>
+      </div>
+
+      <div class="step-card">
+        <span class="step-badge">Шаг 5</span>
+        <img src="assets/step5.jpg" alt="Спокойно всем">
+        <h3>Спокойно всем</h3>
+        <ul class="step-checks">
+          <li>Пожилой человек чувствует вашу заботу</li>
+          <li>У пожилого родственника появляется интерес к жизни</li>
+          <li>Вы спокойны, зная о здоровье близкого</li>
+        </ul>
+      </div>
+
+      <div class="doubt-card">
+        <h3>Сомневаетесь? Поможем понять, подойдет ли браслет вашему родственнику.</h3>
+        <ul class="step-checks">
+          <li>Короткий опрос - всего 1 минута</li>
+          <li>Возникнут вопросы - менеджер проконсультирует вас</li>
+        </ul>
+        <a href="#" class="quiz-btn">
+          <span class="title">ПОДОЙДЕТ ЛИ БРАСЛЕТ?</span>
+          <span class="sub">Пройти опрос за 1 минуту</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
